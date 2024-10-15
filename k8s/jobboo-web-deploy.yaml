@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jobboo-web
+  labels:
+    name: jobboo
+spec:
+  containers:
+  - name: c-jobboo-web
+    image: akidev9777/jobboo
+    ports:
+      - containerPort: 8080
+    env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: docker
+    envFrom:
+    - secretRef:
+        name: mysql-secret
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+type: Opaque
+data:
+  HOST: bXlzcWwtc2VydmljZQ==          # base64로 인코딩된 mysql-service
+  PORT: MzMwNg==                     # base64로 인코딩된 3306
+  DATABASE: bXlhcHBkYg==             # base64로 인코딩된 myappdb
+  USERNAME: cm9vdA==                 # base64로 인코딩된 root
+  PASSWORD: MTExMQ==                 # base64로 인코딩된 1111
+
+

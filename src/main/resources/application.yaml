@@ -24,9 +24,9 @@ spring:
     activate:
       on-profile: docker
   datasource:
-    url: jdbc:mysql://mysql-container:3306/myappdb
-    username: root
-    password: 1111
+    url: jdbc:mysql://${HOST}:${PORT}/${DATABASE}
+    username: ${USERNAME}
+    password: ${PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:

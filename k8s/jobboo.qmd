@@ -1,0 +1,17 @@
+---
+title: "Kubernetes Cluster Status"
+format: html
+jupyter: python3
+---
+
+## Introduction
+
+In this section, we will go through the process of deploying a MySQL database using a Docker container. This is especially useful when setting up a MySQL instance for local development or when integrating with applications like Spring Boot.
+
+## Running MySQL Docker Container
+
+To start a MySQL container using Docker, follow these steps:
+
+```{python}
+!docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=1111 -e MYSQL_DATABASE=myappdb -p 3306:3306 -d mysql:8
+```
