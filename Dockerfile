@@ -1,11 +1,11 @@
-# Use OpenJDK 17 base image
+# Use Maven image to build the project
+FROM maven:3.8.4-openjdk-17 AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package
+
+# Use OpenJDK to run the jar
 FROM openjdk:17
-
-# Copy the jar file into the container
-COPY target/jobboo-0.0.1-SNAPSHOT.jar /app.jar
-
-# Set the default command to execute when launching the container
+COPY --from=build /app/target/jobboo-0.0.1-SNAPSHOT.jar /app.jar
 CMD ["java", "-jar", "/app.jar"]
-
-# Expose the port the app runs on
 EXPOSE 8080
