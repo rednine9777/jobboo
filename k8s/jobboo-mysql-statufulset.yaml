@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobboo-db-mysql-svc
+spec:
+  selector:
+    app: jobboo-db-mysql
+  ports:
+  - port: 3306
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jobboo-db-mysql
+spec:
+  selector:
+    matchLabels:
+      app: jobboo-db-mysql
+  serviceName: jobboo-db-mysql-svc
+  replicas: 1 # by default is 1
+  template:
+    metadata:
+      labels:
+        app: jobboo-db-mysql
+    spec:
+      containers:
+      - name: jobboo-db-mysql
+        image: mysql:8
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: PASSWORD
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef: 
+                name: mysql-secret
+                key: DATABASE
+        volumeMounts:
+        - name: jobboo-db-mysql-pvc
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: jobboo-db-mysql-pvc
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+    

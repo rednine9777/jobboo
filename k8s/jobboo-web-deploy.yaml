@@ -1,33 +1,77 @@
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: jobboo-web
+#   labels:
+#     name: jobboo
+# spec:
+#   containers:
+#   - name: c-jobboo-web
+#     image: akidev9777/jobboo
+#     ports:
+#       - containerPort: 8080
+#     env:
+#     - name: SPRING_PROFILES_ACTIVE
+#       value: docker
+#     envFrom:
+#     - secretRef:
+#         name: mysql-secret
+
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  name: jobboo-web
-  labels:
-    name: jobboo
+  name: jobboo-web-svc
 spec:
-  containers:
-  - name: c-jobboo-web
-    image: akidev9777/jobboo
-    ports:
-      - containerPort: 8080
-    env:
-    - name: SPRING_PROFILES_ACTIVE
-      value: docker
-    envFrom:
-    - secretRef:
-        name: mysql-secret
+  selector:
+    app: jobboo-web
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: NodePort
+    
+
 
 ---
-apiVersion: v1
-kind: Secret
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: mysql-secret
-type: Opaque
-data:
-  HOST: bXlzcWwtc2VydmljZQ==          # base64로 인코딩된 mysql-service
-  PORT: MzMwNg==                     # base64로 인코딩된 3306
-  DATABASE: bXlhcHBkYg==             # base64로 인코딩된 myappdb
-  USERNAME: cm9vdA==                 # base64로 인코딩된 root
-  PASSWORD: MTExMQ==                 # base64로 인코딩된 1111
+  name: jobboo-web-deploy
+  labels:
+    app: jodboo-web-deploy
+spec:
+  selector:
+    matchLabels:
+      app: jobboo-web
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jobboo-web
+    spec:
+      containers:
+      - name: c-jobboo-web
+        image: akidev9777/jobboo
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: docker
+        envFrom:
+        - secretRef:
+            name: mysql-secret
+
+
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: mysql-secret
+# type: Opaque
+# data:
+#   HOST: am9iYm9vLWRiLW15c3FsLXN2Yw==          # base64로 인코딩된 jobboo-db-mysql-svc
+#   PORT: MzMwNg==                     # base64로 인코딩된 3306
+#   DATABASE: bXlhcHBkYg==             # base64로 인코딩된 myappdb
+#   USERNAME: cm9vdA==                 # base64로 인코딩된 root
+#   PASSWORD: MTExMQ==                 # base64로 인코딩된 1111
 
 
