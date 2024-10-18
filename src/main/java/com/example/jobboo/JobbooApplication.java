@@ -26,9 +26,10 @@ public class JobbooApplication {
 			User user4 = new User(null, "박서연", "잡부");
 			User user5 = new User(null, "박지만", "잡부");
 			User user6 = new User(null, "최광진", "잡부");
-			User user7 = new User(null, "홍구", "잡부123123");
+			User user7 = new User(null, "홍구", "잡부");
+			User user8 = new User(null, "Argo", "ArgoCD");
 
-			userRepository.saveAll(List.of(user1, user2, user3, user4, user5, user6, user7));
+			userRepository.saveAll(List.of(user1, user2, user3, user4, user5, user6, user7, user8));
 		};
 	}
 }
