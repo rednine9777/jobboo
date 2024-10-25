@@ -1,0 +1,16 @@
+docker network create jobboo-network
+
+docker run -d --name mysql --network jobboo-network \
+-e MYSQL_ROOT_PASSWORD=1111 \
+-e MYSQL_DATABASE=myappdb \
+mysql:8.0
+
+
+docker run -d -p 8080:8080 --name jobboo --network jobboo-mysql \
+  -e SPRING_PROFILES_ACTIVE=docker \
+  -e HOST=mysql \
+  -e PORT=3306 \
+  -e DATABASE=myappdb \
+  -e USERNAME=root \
+  -e PASSWORD=1111 \
+jobboo
