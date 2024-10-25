@@ -25,7 +25,7 @@ public class UserController {
     List<User> userList = userRepository.findAll();
 
     String html = "<html>" +
-        "<head><title>잡부</title></head>" +
+        "<head><title>잡부123</title></head>" +
         "<body style='font-family: Arial, sans-serif;'>" +
         "<h1 style='text-align: center; color: #4CAF50;'>잡부</h1>" +
         "<h2 style='color: #FF5722;'>잡부 명단</h2>" +
