@@ -1,9 +1,7 @@
 pipeline {
   agent {
-    kubernetes {
-      label 'jenkins-jenkins-slave' // PodTemplate에 지정된 정확한 라벨
-      defaultContainer 'jnlp'       // 기본 컨테이너 이름 (예: jnlp)
-      yamlFile 'default'            // PodTemplate을 지정하는 방식
+    node {
+      label 'jenkins-jenkins-slave'
     }
   }
   stages {
