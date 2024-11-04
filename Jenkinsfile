@@ -1,5 +1,11 @@
 pipeline {
-  agent any
+  agent {
+    kubernetes {
+      label 'jenkins-jenkins-slave' // PodTemplate에 지정된 정확한 라벨
+      defaultContainer 'jnlp'       // 기본 컨테이너 이름 (예: jnlp)
+      yamlFile 'default'            // PodTemplate을 지정하는 방식
+    }
+  }
   stages {
     stage('git scm update') {
       steps {
@@ -8,19 +14,23 @@ pipeline {
     }
     stage('docker build and push') {
       steps {
-        sh '''
-        docker build -t localhost:5000/jobboo .
-        docker push localhost:5000/jobboo
-        '''
+        container('jnlp') { // 지정된 컨테이너에서 빌드 및 푸시
+          sh '''
+          docker build -t localhost:5000/jobboo .
+          docker push localhost:5000/jobboo
+          '''
+        }
       }
     }
     stage('deploy kubernetes') {
       steps {
-        sh '''
-        kubectl create deployment pl-bulk-prod --image=localhost:5000/echo-ip
-        kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
-                                               --target-port=80 --name=pl-bulk-prod-svc
-        '''
+        container('jnlp') {
+          sh '''
+          kubectl create deployment pl-bulk-prod --image=localhost:5000/jobboo
+          kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
+                                                 --target-port=80 --name=pl-bulk-prod-svc
+          '''
+        }
       }
     }
   }
