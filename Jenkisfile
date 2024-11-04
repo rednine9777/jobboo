@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-      label 'jenkins-jenkins-slave' // PodTemplate의 라벨과 일치하게 설정
+      label 'jenkins-jenkins-slave' // PodTemplate 라벨
       defaultContainer 'jnlp'
     }
   }
@@ -13,7 +13,7 @@ pipeline {
     }
     stage('docker build and push') {
       steps {
-        container('jnlp') { // PodTemplate에 정의된 도커가 설치된 컨테이너 이름 사용
+        container('jnlp') { // jnlp 컨테이너 사용
           sh '''
           docker build -t localhost:5000/jobboo .
           docker push localhost:5000/jobboo
@@ -23,7 +23,7 @@ pipeline {
     }
     stage('deploy kubernetes') {
       steps {
-        container('jnlp') { // 동일한 컨테이너 지정
+        container('jnlp') { // 동일한 컨테이너에서 kubectl 실행
           sh '''
           kubectl create deployment pl-bulk-prod --image=localhost:5000/jobboo
           kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
